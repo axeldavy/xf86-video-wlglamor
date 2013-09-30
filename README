@@ -1,0 +1,17 @@
+wlglamor is an experimental XWayland glamor DDX.
+
+The ultimate goal is to have only one DDX for Wayland, and this code will
+probably be integrated to xf86-video-wayland.
+
+It works with Xserver 1.14, unlike the current xf86-video-ati and 
+xf86-video-nouveau XWayland branches we can find today.
+
+The DDX is based on Glamor and gbm.
+
+More information on Glamor can be found here:
+
+http://www.freedesktop.org/wiki/Software/Glamor/
+
+If you wish to report bugs, the best location is here:
+
+https://bugs.freedesktop.org/enter_bug.cgi?product=wayland
