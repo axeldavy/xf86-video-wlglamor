@@ -6,11 +6,13 @@
 #include "xf86_OSproc.h"
 
 #include "xf86Cursor.h"
-#include "xorg/dri2.h"
+#include <dri2.h>
 #include <gbm.h>
 #include <string.h>
 
 #include "xwayland.h"
+
+#include "compat-api.h"
 
 #define WAYLAND_DRIVER_NAME "wlglamor"
 #define COMBINED_DRIVER_VERSION \

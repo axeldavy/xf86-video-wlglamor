@@ -74,7 +74,7 @@
 #include "servermd.h"
 
 
-#include "xorg/dri2.h"
+#include <dri2.h>
 
 #define GLAMOR_FOR_XORG  1
 #include <glamor.h>
