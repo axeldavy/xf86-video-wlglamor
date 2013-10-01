@@ -33,7 +33,6 @@ struct wlglamor_device
     
     void (*BlockHandler)(BLOCKHANDLER_ARGS_DECL);
 
-    pointer* fb;
     int fd;
     struct gbm_device *gbm;
     struct gbm_bo* front_bo;

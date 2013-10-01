@@ -23,7 +23,7 @@
 # Initialize Autoconf
 AC_PREREQ([2.60])
 AC_INIT([xf86-video-wlglamor],
-        [1.0.0],
+        [1.0.1],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=wayland],
         [xf86-video-wlglamor])
 AC_CONFIG_SRCDIR([Makefile.am])

@@ -215,8 +215,6 @@ wlglamor_free_screen (FREE_SCREEN_ARGS_DECL)
 
   if (wlglamor)
     {
-      if (wlglamor->fb)
-	free (wlglamor->fb);
       if (wlglamor->front_bo)
 	gbm_bo_destroy (wlglamor->front_bo);
       /* Note: gbm_bo_destroy only dereference if the buffer is used outside.
@@ -797,12 +795,7 @@ wlglamor_screen_init (SCREEN_INIT_ARGS_DECL)
   if (!wlglamor->front_bo)
     return FALSE;
 
-  wlglamor->fb = malloc (pScrn->displayWidth * pScrn->virtualY *
-			 ((pScrn->bitsPerPixel + 7) >> 3));
-  if (!wlglamor->fb)	/* we never use this fb anyway. Just for initializing*/
-    return FALSE;
-
-  ret = fbScreenInit (pScreen, 0,	/*wlglamor->fb, TODO: test with 0*/
+  ret = fbScreenInit (pScreen, 0,
 		      pScrn->virtualX, pScrn->virtualY,
 		      pScrn->xDpi, pScrn->yDpi,
 		      pScrn->displayWidth, pScrn->bitsPerPixel);
