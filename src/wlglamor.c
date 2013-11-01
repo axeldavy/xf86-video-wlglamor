@@ -319,7 +319,6 @@ fixup_glamor (DrawablePtr drawable, PixmapPtr pixmap)
   struct wlglamor_pixmap *priv =
     dixLookupPrivate (&pixmap->devPrivates, wlglamor_pixmap_private_key);
   GCPtr gc;
-  union gbm_bo_handle handle;
 
   /* With a glamor pixmap, 2D pixmaps are created in texture
    * and without a static BO attached to it. To support DRI,
@@ -347,22 +346,12 @@ fixup_glamor (DrawablePtr drawable, PixmapPtr pixmap)
     }
 
   dixSetPrivate (&pixmap->devPrivates, wlglamor_pixmap_private_key, NULL);
-  screen->DestroyPixmap (pixmap);
 
   /* And redirect the pixmap to the new bo (for 3D). */
-  dixSetPrivate (&pixmap->devPrivates, wlglamor_pixmap_private_key, priv);
+  glamor_egl_exchange_buffers(old, pixmap);
+  dixSetPrivate (&old->devPrivates, wlglamor_pixmap_private_key, priv);
   old->refcnt++;
-
-  /* This creating should not fail, as we already created its
-   * successfully. But if it happens, we put a warning indicator
-   * here, and the old pixmap will still be a glamor pixmap, and
-   * latter the pixmap_flink will get a 0 name, then the X server
-   * will pass a BadAlloc to the client.*/
-  handle = gbm_bo_get_handle (priv->bo);
-  if (!glamor_egl_create_textured_pixmap (old, handle.u32,
-					  gbm_bo_get_stride (priv->bo)))
-    xf86DrvMsg (scrn->scrnIndex, X_WARNING,
-		"Failed to get DRI drawable for glamor pixmap.\n");
+  screen->DestroyPixmap (pixmap);
 
   screen->ModifyPixmapHeader (old,
 			      old->drawable.width,
