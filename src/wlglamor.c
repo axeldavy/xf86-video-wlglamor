@@ -392,7 +392,7 @@ wlglamor_create_window_buffer (struct xwl_window *xwl_window,
 
     fd = glamor_dri3_fd_from_pixmap(pScreen, pixmap, &stride, &size);
     if ( fd >= 0) {
-        ret = xwl_create_window_buffer_drm_from_fd (xwl_window, pixmap, fd);
+	ret = xwl_create_window_buffer_drm_from_fd (xwl_window, pixmap, fd);
 	close(fd);
     }
     return ret;

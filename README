@@ -3,10 +3,12 @@ wlglamor is an experimental XWayland glamor DDX.
 The ultimate goal is to have only one DDX for Wayland, and this code will
 probably be integrated to xf86-video-wayland.
 
-It works with the XWayland branch of Xserver 1.14, unlike the current xf86-video-ati and 
-xf86-video-nouveau XWayland branches we can find today.
+It works with the XWayland branch of Xserver 1.15.
 
-The DDX is based on Glamor and gbm.
+The DDX is based on Glamor, and provides DRI3 (no DRI2).
+It requires the driver (Mesa) to support DRI3,
+which at the time of writing is only for intel (but radeon
+and nouveau are coming soon).
 
 More information on Glamor can be found here:
 
