@@ -6,8 +6,6 @@
 #include "xf86_OSproc.h"
 
 #include "xf86Cursor.h"
-#include <dri2.h>
-#include <gbm.h>
 #include <string.h>
 
 #include "xwayland.h"
@@ -36,6 +34,7 @@ struct wlglamor_device
     void (*BlockHandler)(BLOCKHANDLER_ARGS_DECL);
 
     int fd;
+    PixmapPtr front_pixmap;
     struct xwl_screen *xwl_screen;
 };
 

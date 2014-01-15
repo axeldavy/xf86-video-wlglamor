@@ -83,6 +83,9 @@
 #include <dri3.h>
 #include <misyncshm.h>
 
+/* we do not need a pixmap private key, but X will crash
+ * if we don't ask one */
+static DevPrivateKeyRec wlglamor_pixmap_dumb;
 
 static Bool
 wlglamor_get_device (ScrnInfoPtr pScrn)
@@ -206,7 +209,6 @@ wlglamor_create_screen_resources (ScreenPtr screen)
 {
     ScrnInfoPtr pScrn = xf86ScreenToScrn (screen);
     struct wlglamor_device *wlglamor = wlglamor_screen_priv (screen);
-    struct wlglamor_pixmap *priv;
 
     screen->CreateScreenResources = wlglamor->CreateScreenResources;
     if (!(*screen->CreateScreenResources) (screen))
@@ -231,6 +233,7 @@ wlglamor_create_screen_resources (ScreenPtr screen)
 	return FALSE;
 
     screen->SetScreenPixmap (wlglamor->front_pixmap);
+    glamor_set_screen_pixmap(wlglamor->front_pixmap,NULL);
     return TRUE;
 }
 
@@ -267,6 +270,9 @@ wlglamor_screen_init (SCREEN_INIT_ARGS_DECL)
 
     pScrn = xf86Screens[pScreen->myNum];
     wlglamor = wlglamor_screen_priv (pScreen);
+
+    if (!dixRegisterPrivateKey(&wlglamor_pixmap_dumb,PRIVATE_PIXMAP,0))
+	return BadAlloc;
 
     /* Visual and Screen initialization */
     miClearVisualTypes ();
@@ -382,10 +388,14 @@ wlglamor_create_window_buffer (struct xwl_window *xwl_window,
     ScreenPtr pScreen = pixmap->drawable.pScreen;
     CARD16 stride;
     CARD32 size;
-    int fd;
+    int fd, ret = FALSE;
 
     fd = glamor_dri3_fd_from_pixmap(pScreen, pixmap, &stride, &size);
-    return xwl_create_window_buffer_drm_from_fd (xwl_window, pixmap, fd);
+    if ( fd >= 0) {
+        ret = xwl_create_window_buffer_drm_from_fd (xwl_window, pixmap, fd);
+	close(fd);
+    }
+    return ret;
 }
 
 static struct xwl_driver xwl_driver = {
@@ -402,7 +412,6 @@ static Bool
 wlglamor_pre_init (ScrnInfoPtr pScrn, int flags)
 {
     struct wlglamor_device *wlglamor;
-    int i;
     GDevPtr device;
     int pix24bpp, pixel_bytes;
     pointer glamor_module;
