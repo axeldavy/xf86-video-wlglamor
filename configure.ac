@@ -23,7 +23,7 @@
 # Initialize Autoconf
 AC_PREREQ([2.60])
 AC_INIT([xf86-video-wlglamor],
-        [1.0.1],
+        [2.0.0],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=wayland],
         [xf86-video-wlglamor])
 AC_CONFIG_SRCDIR([Makefile.am])
@@ -60,16 +60,13 @@ XORG_DRIVER_CHECK_EXT(XV, videoproto)
 XORG_DRIVER_CHECK_EXT(XFreeXDGA, xf86dgaproto)
 
 # Obtain compiler/linker options for the driver dependencies
-PKG_CHECK_MODULES(XORG, [xorg-server >= 1.14] xproto fontsproto $REQUIRED_MODULES)
+PKG_CHECK_MODULES(XORG, [xorg-server >= 1.15] xproto fontsproto $REQUIRED_MODULES)
 
 # Checks for libraries.
-PKG_CHECK_MODULES(WAYLAND, [wayland-client >= 1.2])
+PKG_CHECK_MODULES(WAYLAND, [wayland-client >= 1.3])
 
-PKG_CHECK_MODULES(LIBDRM, [libdrm >= 2.4.46])
-PKG_CHECK_MODULES(LIBGBM, [gbm])
 PKG_CHECK_MODULES(LIBGLAMOR, [glamor >= 0.5.1])
 PKG_CHECK_MODULES(LIBGLAMOR_EGL, [glamor-egl])
-PKG_CHECK_MODULES(LIBUDEV, [libudev])
 
 AC_CONFIG_FILES([
                 Makefile

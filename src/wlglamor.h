@@ -36,15 +36,7 @@ struct wlglamor_device
     void (*BlockHandler)(BLOCKHANDLER_ARGS_DECL);
 
     int fd;
-    struct gbm_device *gbm;
-    struct gbm_bo* front_bo;
-    PixmapPtr front_pixmap;
     struct xwl_screen *xwl_screen;
-};
-
-struct wlglamor_pixmap {
-    struct gbm_bo *bo;
-    int refcount;
 };
 
 static inline struct wlglamor_device *wlglamor_scrninfo_priv(ScrnInfoPtr pScrn)

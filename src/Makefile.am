@@ -25,16 +25,14 @@
 # _ladir passes a wlshm rpath to libtool so the thing will actually link
 # TODO: -nostdlib/-Bstatic/-lgcc platform magic, not installing the .a, etc.
 
-AM_CFLAGS = $(XORG_CFLAGS) $(LIBDRM_CFLAGS) $(LIBGBM_CFLAGS) $(LIBGLAMOR_CFLAGS) $(LIBUDEV_CFLAGS)
+AM_CFLAGS = $(XORG_CFLAGS) $(LIBGLAMOR_CFLAGS)
 
 wlglamor_drv_la_LTLIBRARIES = wlglamor_drv.la
-wlglamor_drv_la_LIBADD = $(LIBDRM_LIBS) $(LIBGBM_LIBS) $(LIBGLAMOR_LIBS) $(LIBUDEV_LIBS)
+wlglamor_drv_la_LIBADD = $(LIBGLAMOR_LIBS)
 wlglamor_drv_la_LDFLAGS = -module -avoid-version
 wlglamor_drv_ladir = @moduledir@/drivers
 
 wlglamor_drv_la_SOURCES = \
          wlglamor.c \
          wlglamor.h \
-	 compat-api.h \
-	 driver_name.c \
-	 driver_name.h
+         compat-api.h
