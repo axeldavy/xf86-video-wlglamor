@@ -333,7 +333,7 @@ wlglamor_screen_init (SCREEN_INIT_ARGS_DECL)
     if (xwl_drm_prime_able (wlglamor->xwl_screen)
 	&& glamor_is_dri3_support_enabled (pScreen)
 	&& miSyncShmScreenInit (pScreen)
-	&& dri3_screen_init (screen, &wlglamor_dri3_screen_info)) {
+	&& dri3_screen_init (pScreen, &wlglamor_dri3_screen_info)) {
 	xf86DrvMsg (pScrn->scrnIndex, X_INFO, "DRI3: Initialized");
     }
     else {
