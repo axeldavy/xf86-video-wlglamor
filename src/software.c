@@ -42,6 +42,7 @@ static Bool
 wlglamor_software_destroy_pixmap (PixmapPtr pixmap)
 {
     ScreenPtr pScreen = pixmap->drawable.pScreen;
+    struct wlglamor_device *wlglamor = wlglamor_screen_priv (pScreen);
     struct wlglamor_pixmap *priv;
     Bool ret;
 
