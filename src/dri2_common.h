@@ -15,6 +15,9 @@ struct dri2_buffer_priv
   unsigned int refcnt;
 };
 
+Bool
+wlglamor_is_authentication_able (ScreenPtr pScreen);
+
 int
 wlglamor_auth_magic (ClientPtr client, ScreenPtr pScreen, uint32_t magic);
 

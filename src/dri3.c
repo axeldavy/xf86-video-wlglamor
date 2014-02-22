@@ -167,6 +167,14 @@ wlglamor_dri3_initialize (ScreenPtr pScreen)
 	return FALSE;
     }
 
+    wlglamor->create_window_buffer = wlglamor_dri3_create_window_buffer;
+
+    if (!wlglamor_is_authentication_able(pScreen)) {
+	xf86DrvMsg (pScrn->scrnIndex, X_ERROR,
+		    "DRI2 Initialization failed: Unable to provide authentication\n");
+	return TRUE;
+    }
+
     dri2_info.fd = wlglamor->device_fd;
     dri2_info.deviceName = drmGetDeviceNameFromFd (wlglamor->device_fd);
     dri2_info.driverName = dri2_get_driver_for_fd (wlglamor->device_fd);
@@ -183,6 +191,5 @@ wlglamor_dri3_initialize (ScreenPtr pScreen)
 	xf86DrvMsg (pScrn->scrnIndex, X_INFO, "DRI2: Initialized\n");
     else 
 	xf86DrvMsg (pScrn->scrnIndex, X_INFO, "DRI2 Initialization failed\n");
-    wlglamor->create_window_buffer = wlglamor_dri3_create_window_buffer;
     return TRUE;
 }

@@ -38,6 +38,30 @@
 
 #include "dri2_common.h"
 
+static char
+is_fd_render_node (int fd)
+{
+    struct stat render;
+
+    if (fstat (fd, &render))
+	return 0;
+
+    if (!S_ISCHR (render.st_mode))
+	return 0;
+
+    if (render.st_rdev & 0x80)
+	return 1;
+    return 0;
+}
+
+Bool
+wlglamor_is_authentication_able (ScreenPtr pScreen)
+{
+    struct wlglamor_device *wlglamor = wlglamor_screen_priv (pScreen);
+
+    return !is_fd_render_node (wlglamor->device_fd);
+}
+
 int
 wlglamor_auth_magic (ClientPtr client, ScreenPtr pScreen, uint32_t magic)
 {

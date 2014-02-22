@@ -235,6 +235,12 @@ wlglamor_dri2_only_initialize (ScreenPtr pScreen)
     DRI2InfoRec dri2_info = { 0 };
     const char *driverNames[1];
 
+    if (!wlglamor_is_authentication_able(pScreen)) {
+	xf86DrvMsg (pScrn->scrnIndex, X_ERROR,
+		    "DRI2 Initialization failed: Unable to provide authentication\n");
+	return FALSE;
+    }
+
     wlglamor->gbm = gbm_create_device (wlglamor->device_fd);
     if (wlglamor->gbm == NULL) {
 	xf86DrvMsg (pScrn->scrnIndex, X_ERROR, "DRI2: Couldn't get display device\n");
