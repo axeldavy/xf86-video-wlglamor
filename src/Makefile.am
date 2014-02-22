@@ -34,7 +34,12 @@ wlglamor_drv_ladir = @moduledir@/drivers
 
 wlglamor_drv_la_SOURCES = \
          wlglamor.c \
-         wlglamor.h \
-	 compat-api.h \
-	 driver_name.c \
-	 driver_name.h
+         common.h \
+         dri2_common.c \
+         dri2_common.h \
+         dri3.c \
+         dri2_only.c \
+         software.c \
+         compat-api.h \
+         driver_name.c \
+         driver_name.h

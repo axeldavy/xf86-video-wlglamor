@@ -1,12 +1,9 @@
 wlglamor is an experimental XWayland glamor DDX.
 
-The ultimate goal is to have only one DDX for Wayland, and this code will
-probably be integrated to xf86-video-wayland.
+It works with the XWayland branch of Xserver 1.15.
 
-It works with the XWayland branch of Xserver 1.14, unlike the current xf86-video-ati and 
-xf86-video-nouveau XWayland branches we can find today.
-
-The DDX is based on Glamor and gbm.
+The DDX is based on Glamor, and provides DRI3, DRI2,
+or fallbacks to software acceleration.
 
 More information on Glamor can be found here:
 
