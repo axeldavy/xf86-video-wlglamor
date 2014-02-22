@@ -22,24 +22,31 @@
 # this is obnoxious:
 # -module lets us name the module exactly how we want
 # -avoid-version prevents gratuitous .0.0.0 version numbers on the end
-# _ladir passes a wlshm rpath to libtool so the thing will actually link
+# _ladir passes a wlglamor rpath to libtool so the thing will actually link
 # TODO: -nostdlib/-Bstatic/-lgcc platform magic, not installing the .a, etc.
 
-AM_CFLAGS = $(XORG_CFLAGS) $(LIBDRM_CFLAGS) $(LIBGBM_CFLAGS) $(LIBGLAMOR_CFLAGS) $(LIBUDEV_CFLAGS)
+AM_CFLAGS = $(XORG_CFLAGS)
 
 wlglamor_drv_la_LTLIBRARIES = wlglamor_drv.la
-wlglamor_drv_la_LIBADD = $(LIBDRM_LIBS) $(LIBGBM_LIBS) $(LIBGLAMOR_LIBS) $(LIBUDEV_LIBS)
 wlglamor_drv_la_LDFLAGS = -module -avoid-version
 wlglamor_drv_ladir = @moduledir@/drivers
 
 wlglamor_drv_la_SOURCES = \
          wlglamor.c \
          common.h \
+         software.c \
+         compat-api.h
+
+if HW_ACC
+wlglamor_drv_la_SOURCES += \
          dri2_common.c \
          dri2_common.h \
          dri3.c \
          dri2_only.c \
-         software.c \
-         compat-api.h \
          driver_name.c \
          driver_name.h
+
+wlglamor_drv_la_LIBADD = $(LIBDRM_LIBS) $(LIBGBM_LIBS) $(LIBGLAMOR_LIBS) $(LIBUDEV_LIBS)
+
+AM_CFLAGS += $(LIBDRM_CFLAGS) $(LIBGBM_CFLAGS) $(LIBGLAMOR_CFLAGS) $(LIBUDEV_CFLAGS)
+endif

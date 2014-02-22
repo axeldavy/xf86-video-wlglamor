@@ -38,9 +38,11 @@
 #include <scrnintstr.h>
 #include <servermd.h>
 
+#ifdef HW_ACC
 #define GLAMOR_FOR_XORG  1
 #include <gbm.h>
 #include <glamor.h>
+#endif
 
 #define WAYLAND_DRIVER_NAME "wlglamor"
 #define COMBINED_DRIVER_VERSION \
@@ -69,12 +71,13 @@ struct wlglamor_device
 
     /* screen data */
     struct xwl_screen *xwl_screen;
-
+#ifdef HW_ACC
     /* hw acc common */
     int device_fd;
 
     /* dri2 only */
     struct gbm_device *gbm;
+#endif
 };
 
 static inline struct wlglamor_device *wlglamor_scrninfo_priv(ScrnInfoPtr pScrn)
@@ -102,11 +105,13 @@ wlglamor_get_pixmap_priv (PixmapPtr pixmap);
 void
 wlglamor_set_pixmap_priv (PixmapPtr pixmap, void *priv);
 
+#ifdef HW_ACC
 Bool
 wlglamor_dri3_initialize (ScreenPtr pScreen);
 
 Bool
 wlglamor_dri2_only_initialize (ScreenPtr pScreen);
+#endif
 
 void
 wlglamor_software_initialize (ScreenPtr pScreen);

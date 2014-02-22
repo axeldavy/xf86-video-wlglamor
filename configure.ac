@@ -52,6 +52,9 @@ AC_ARG_WITH(xorg-module-dir, [  --with-xorg-module-dir=DIR ],
                              [ moduledir="$libdir/xorg/modules" ])
 AC_SUBST(moduledir)
 
+AC_MSG_CHECKING([whether to build Software Acceleration only])
+AC_ARG_ENABLE(software_only,         AS_HELP_STRING([--enable-software-only], [Build Software Acceleration only (default: no)]), [NO_ACC="$enableval"], [NO_ACC=no])
+AC_MSG_RESULT([$NO_ACC])
 
 # Store the list of server defined optional extensions in REQUIRED_MODULES
 XORG_DRIVER_CHECK_EXT(RANDR, randrproto)
@@ -66,10 +69,18 @@ PKG_CHECK_MODULES(XORG, [xorg-server >= 1.15] xproto fontsproto $REQUIRED_MODULE
 PKG_CHECK_MODULES(WAYLAND, [wayland-client >= 1.3])
 
 PKG_CHECK_MODULES(LIBDRM, [libdrm >= 2.4.46])
-PKG_CHECK_MODULES(LIBGBM, [gbm])
-PKG_CHECK_MODULES(LIBGLAMOR, [glamor >= 0.6.0])
-PKG_CHECK_MODULES(LIBGLAMOR_EGL, [glamor-egl])
-PKG_CHECK_MODULES(LIBUDEV, [libudev])
+PKG_CHECK_MODULES(LIBGBM, [gbm], [], [NO_ACC=yes])
+PKG_CHECK_MODULES(LIBGLAMOR, [glamor >= 0.6.0], [], [NO_ACC=yes])
+PKG_CHECK_MODULES(LIBGLAMOR_EGL, [glamor-egl], [], [NO_ACC=yes])
+PKG_CHECK_MODULES(LIBUDEV, [libudev], [], [NO_ACC=yes])
+
+if test "x$NO_ACC" = xyes; then
+   AC_MSG_WARN([Build Software Acceleration only])
+else 
+   AC_DEFINE(HW_ACC, 1, [Build hw acceleration])
+fi
+
+AM_CONDITIONAL([HW_ACC], [test "x$NO_ACC" != xyes])
 
 AC_CONFIG_FILES([
                 Makefile

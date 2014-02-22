@@ -107,9 +107,10 @@ wlglamor_block_handler (BLOCKHANDLER_ARGS_DECL)
     pScreen->BlockHandler = wlglamor->BlockHandler;
     (*pScreen->BlockHandler) (BLOCKHANDLER_ARGS);
     pScreen->BlockHandler = wlglamor_block_handler;
-
+#ifdef HW_ACC
     if (!wlglamor->is_software)
 	glamor_block_handler (pScreen);	/* flushes */
+#endif
     if (wlglamor->xwl_screen)
 	xwl_screen_post_damage (wlglamor->xwl_screen);
 }
@@ -123,8 +124,10 @@ wlglamor_flush_callback (CallbackListPtr * list,
     struct wlglamor_device *wlglamor = wlglamor_screen_priv (pScreen);
 
     if (pScrn->vtSema) {
+#ifdef HW_ACC
 	if (!wlglamor->is_software)
 	    glamor_block_handler (pScreen);
+#endif
 	if (wlglamor->xwl_screen)
 	    xwl_screen_post_damage (wlglamor->xwl_screen);
     }
@@ -155,8 +158,10 @@ wlglamor_free_screen (FREE_SCREEN_ARGS_DECL)
     struct wlglamor_device *wlglamor = wlglamor_scrninfo_priv (pScrn);
 
     if (wlglamor) {
+#ifdef HW_ACC
 	if (!wlglamor->is_software)
 	    glamor_close_screen (xf86ScrnToScreen (pScrn));
+#endif
 	if (wlglamor->xwl_screen)
 	    xwl_screen_destroy (wlglamor->xwl_screen);
 	wlglamor->xwl_screen = NULL;
@@ -182,10 +187,10 @@ wlglamor_create_screen_resources (ScreenPtr screen)
     if (!(*screen->CreateScreenResources) (screen))
 	return FALSE;
     screen->CreateScreenResources = wlglamor_create_screen_resources;
-
+#ifdef HW_ACC
     if (!wlglamor->is_software && !glamor_glyphs_init (screen))
 	return FALSE;
-
+#endif
     /* We can't allocate glamor pixmaps before. Allocate the screen pixmap
      * to prevent glamor from bugging. */
 
@@ -195,8 +200,10 @@ wlglamor_create_screen_resources (ScreenPtr screen)
 	return FALSE;
 
     screen->SetScreenPixmap (front_pixmap);
+#ifdef HW_ACC
     if (!wlglamor->is_software)
 	glamor_set_screen_pixmap (front_pixmap, NULL);
+#endif
     return TRUE;
 }
 
@@ -252,7 +259,7 @@ wlglamor_screen_init (SCREEN_INIT_ARGS_DECL)
     xf86SetBlackWhitePixels (pScreen);
     xf86SetBackingStore (pScreen);
     pScrn->vtSema = TRUE;
-
+#ifdef HW_ACC
     if (wlglamor->glamor_loaded) {
 	if (!glamor_init(pScreen, GLAMOR_INVERTED_Y_AXIS
 				  | GLAMOR_USE_EGL_SCREEN
@@ -275,6 +282,7 @@ wlglamor_screen_init (SCREEN_INIT_ARGS_DECL)
 	    wlglamor_software_initialize (pScreen);
 	}
     } else
+#endif
 	wlglamor_software_initialize (pScreen);
 
     /* Initialise cursor functions */
@@ -435,7 +443,7 @@ wlglamor_pre_init (ScrnInfoPtr pScrn, int flags)
 
     if (!xf86LoadSubModule (pScrn, "fb"))
 	goto error;
-
+#ifdef HW_ACC
     if (xwl_drm_pre_init(wlglamor->xwl_screen) != Success) {
 	xf86DrvMsg (pScrn->scrnIndex, X_ERROR,
 		    "Server has no drm capability\n");
@@ -474,6 +482,7 @@ wlglamor_pre_init (ScrnInfoPtr pScrn, int flags)
 	xf86DrvMsg (pScrn->scrnIndex, X_ERROR, "glamor not available\n");
     }
 no_glamor:
+#endif
     /* Subtract memory for HW cursor */
     xf86ValidateModesSize (pScrn, pScrn->monitor->Modes,
 			   pScrn->display->virtualX,
