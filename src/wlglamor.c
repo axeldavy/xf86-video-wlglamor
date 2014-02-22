@@ -342,6 +342,7 @@ static struct xwl_driver xwl_driver = {
 };
 
 static const OptionInfoRec wlglamor_options[] = {
+    { OPTION_SOFTWARE_ACCELERATION, "ForceSoftwareAcc",  OPTV_BOOLEAN, {0}, FALSE },
     {-1, NULL, OPTV_NONE, {0}, FALSE}
 };
 
@@ -443,6 +444,9 @@ wlglamor_pre_init (ScrnInfoPtr pScrn, int flags)
 
     if (!xf86LoadSubModule (pScrn, "fb"))
 	goto error;
+
+    if (xf86ReturnOptValBool(wlglamor->options, OPTION_SOFTWARE_ACCELERATION, FALSE))
+	goto no_glamor;
 #ifdef HW_ACC
     if (xwl_drm_pre_init(wlglamor->xwl_screen) != Success) {
 	xf86DrvMsg (pScrn->scrnIndex, X_ERROR,
@@ -481,8 +485,8 @@ wlglamor_pre_init (ScrnInfoPtr pScrn, int flags)
     } else {
 	xf86DrvMsg (pScrn->scrnIndex, X_ERROR, "glamor not available\n");
     }
-no_glamor:
 #endif
+no_glamor:
     /* Subtract memory for HW cursor */
     xf86ValidateModesSize (pScrn, pScrn->monitor->Modes,
 			   pScrn->display->virtualX,

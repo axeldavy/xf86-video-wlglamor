@@ -49,6 +49,10 @@
     ((PACKAGE_VERSION_MAJOR << 16) | (PACKAGE_VERSION_MINOR << 8) | \
      PACKAGE_VERSION_PATCHLEVEL)
 
+typedef enum {
+    OPTION_SOFTWARE_ACCELERATION
+} WlGlamorOpts;
+
 typedef int (*CreateWindowBuffer) (struct xwl_window *, PixmapPtr);
      
 /* globals */
