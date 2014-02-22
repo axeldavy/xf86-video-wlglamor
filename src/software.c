@@ -41,7 +41,9 @@ struct wlglamor_pixmap {
 static Bool
 wlglamor_software_destroy_pixmap (PixmapPtr pixmap)
 {
+    ScreenPtr pScreen = pixmap->drawable.pScreen;
     struct wlglamor_pixmap *priv;
+    Bool ret;
 
     if (pixmap->refcnt == 1) {
 	priv = wlglamor_get_pixmap_priv (pixmap);
@@ -51,8 +53,13 @@ wlglamor_software_destroy_pixmap (PixmapPtr pixmap)
 	    free (priv);
 	}
     }
-    fbDestroyPixmap (pixmap);
-    return TRUE;
+
+    pScreen->DestroyPixmap = wlglamor->DestroyPixmap;
+    ret = (*pScreen->DestroyPixmap)(pixmap);
+    wlglamor->DestroyPixmap = pScreen->DestroyPixmap;
+    pScreen->DestroyPixmap = wlglamor_software_destroy_pixmap;
+
+    return ret;
 }
 
 static int
@@ -133,6 +140,7 @@ wlglamor_software_initialize (ScreenPtr pScreen)
 
     xf86DrvMsg (pScrn->scrnIndex, X_INFO, "Use software acceleration\n");
     wlglamor->is_software = TRUE;
+    wlglamor->DestroyPixmap = pScreen->DestroyPixmap;
     pScreen->DestroyPixmap = wlglamor_software_destroy_pixmap;
     wlglamor->create_window_buffer = wlglamor_software_create_window_buffer;
 }

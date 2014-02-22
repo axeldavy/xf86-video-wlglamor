@@ -63,6 +63,7 @@ struct wlglamor_device
     /* proc pointer */
     CloseScreenProcPtr CloseScreen;
     CreateScreenResourcesProcPtr CreateScreenResources;
+    DestroyPixmapProcPtr DestroyPixmap;
     
     void (*BlockHandler)(BLOCKHANDLER_ARGS_DECL);
 
