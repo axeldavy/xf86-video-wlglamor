@@ -151,7 +151,7 @@ wlglamor_dri2_create_pixmap (ScreenPtr pScreen, int w, int h,
     PixmapPtr pixmap;
     struct wlglamor_pixmap *priv;
 
-    if (depth != 32 || depth != 24 || !w || !h)
+    if ((depth != 32 && depth != 24) || !w || !h)
 	return glamor_create_pixmap (pScreen, w, h, depth, usage);
 
     /* If glamor dri3 mode is disabled, we have no way to get the
